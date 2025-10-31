@@ -1,3 +1,3 @@
 package br.edu.ifpe.pontoif.biometric.dto;
 
-public record BiometricSampleDTO(String imageBase64) {}
+public record BiometricSampleDTO(Role role, String imageBase64) {}
