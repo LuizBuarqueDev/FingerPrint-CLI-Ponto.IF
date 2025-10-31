@@ -28,14 +28,12 @@ public class BiometricController {
     public ResponseEntity<String> register(@RequestBody BiometricRegisterDTO dto) {
         System.out.printf("📥 Cadastro recebido para usuário %s (%d chars de imagem)%n",
                 dto.userId(), dto.imageBase64().length());
-        // Aqui você faria o POST para o backend principal
         return ResponseEntity.ok("Biometria registrada!");
     }
 
     @PostMapping("/verify")
     public ResponseEntity<String> verify(@RequestBody BiometricSampleDTO dto) {
         System.out.printf("📥 Verificação recebida (%d chars de imagem)%n", dto.imageBase64().length());
-        // Aqui você chamaria o serviço matcher (SourceAFIS, etc.)
         return ResponseEntity.ok("Verificação processada!");
     }
 }
