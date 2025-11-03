@@ -17,7 +17,7 @@ public class BiometricService {
     private final RestTemplate rest;
 
     private final String remoteRegisterUrl = "http://132.226.159.21:8081/biometric";
-    private final String remoteSampleUrl = "http://132.226.159.21:8081/sample";
+    private final String remoteSampleUrl = "http://132.226.159.21:8081/biometric/sample";
 
     public BiometricService() {
         this.capture = new FutronicSdkCapture();
