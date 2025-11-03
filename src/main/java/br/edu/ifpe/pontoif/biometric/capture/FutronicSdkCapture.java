@@ -1,9 +1,6 @@
 package br.edu.ifpe.pontoif.biometric.capture;
 
-import com.futronic.SDKHelper.FTR_PROGRESS;
-import com.futronic.SDKHelper.FutronicEnrollment;
-import com.futronic.SDKHelper.IEnrollmentCallBack;
-
+import com.futronic.SDKHelper.*;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -29,16 +26,10 @@ public class FutronicSdkCapture {
                 @Override public void OnPutOn(FTR_PROGRESS p) {}
                 @Override public void OnTakeOff(FTR_PROGRESS p) {}
                 @Override public boolean OnFakeSource(FTR_PROGRESS p) { return false; }
-
-                @Override
-                public void UpdateScreenImage(BufferedImage image) {
-                    synchronized (lock) {
-                        lastImageHolder[0] = image;
-                    }
+                @Override public void UpdateScreenImage(BufferedImage image) {
+                    synchronized (lock) { lastImageHolder[0] = image; }
                 }
-
-                @Override
-                public void OnEnrollmentComplete(boolean success, int code) {
+                @Override public void OnEnrollmentComplete(boolean success, int code) {
                     synchronized (lock) {
                         successHolder[0] = success;
                         finished[0] = true;
@@ -48,15 +39,11 @@ public class FutronicSdkCapture {
             };
 
             Thread t = new Thread(() -> {
-                try {
-                    enrollment.Enrollment(callback);
-                } catch (Throwable e) {
-                    synchronized (lock) {
-                        finished[0] = true;
-                        lock.notifyAll();
-                    }
+                try { enrollment.Enrollment(callback); }
+                catch (Throwable e) {
+                    synchronized (lock) { finished[0] = true; lock.notifyAll(); }
                 }
-            }, "Futronic-Capture-Thread");
+            });
             t.start();
 
             long start = System.currentTimeMillis();
@@ -91,20 +78,12 @@ public class FutronicSdkCapture {
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(grayscale, "bmp", baos);
-            baos.flush();
             byte[] imageBytes = baos.toByteArray();
-            baos.close();
 
-            System.out.println("✅ Imagem convertida para BMP 8 bits: "
-                    + imageBytes.length + " bytes (" + grayscale.getWidth() + "x" + grayscale.getHeight() + ")");
+            System.out.println("✅ Imagem capturada: " + imageBytes.length + " bytes");
             return imageBytes;
 
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.err.println("Captura interrompida: " + e.getMessage());
-            return null;
         } catch (Throwable t) {
-            System.err.println("Erro Futronic SDK: " + t.getMessage());
             t.printStackTrace();
             return null;
         }
