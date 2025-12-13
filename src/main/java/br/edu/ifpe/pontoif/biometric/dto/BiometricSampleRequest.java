@@ -1,3 +1,5 @@
 package br.edu.ifpe.pontoif.biometric.dto;
 
-public record BiometricSampleRequest (Role role) {}
+import java.util.UUID;
+
+public record BiometricSampleRequest (Role role, Long sessionId) {}

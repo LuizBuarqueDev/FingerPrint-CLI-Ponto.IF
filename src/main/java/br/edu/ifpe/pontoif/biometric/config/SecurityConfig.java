@@ -12,10 +12,9 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // aplica para todos os endpoints
+                registry.addMapping("/**")
                         .allowedOrigins(
-                                "http://localhost:5173",
-                                "http://132.226.159.21:3001"
+                              "*"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");

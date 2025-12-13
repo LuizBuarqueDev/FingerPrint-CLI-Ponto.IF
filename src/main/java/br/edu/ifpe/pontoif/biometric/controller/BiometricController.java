@@ -20,6 +20,7 @@ public class BiometricController {
     @Operation(summary = "Capture fingerprint and send for registration")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody BiometricRegisterRequest req) {
+        System.out.println(req.toString());
         boolean ok = service.captureAndRegister(req.userId());
         return ok
                 ? ResponseEntity.ok("✅ Biometric registered successfully.")
@@ -27,9 +28,9 @@ public class BiometricController {
     }
 
     @Operation(summary = "Capture fingerprint and send for verification")
-    @PostMapping("/sample")
+    @PostMapping("/match")
     public ResponseEntity<String> sendSample(@RequestBody BiometricSampleRequest req) {
-        boolean ok = service.captureAndSendSample(req.role().name());
+        boolean ok = service.captureAndSendSample(req.sessionId());
         return ok
                 ? ResponseEntity.ok("✅ Biometric sample sent successfully.")
                 : ResponseEntity.internalServerError().body("❌ Failed to send sample.");
