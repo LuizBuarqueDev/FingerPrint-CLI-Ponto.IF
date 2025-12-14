@@ -1,5 +1,6 @@
 package br.edu.ifpe.pontoif.biometric.controller;
 
+import br.edu.ifpe.pontoif.biometric.dto.BiometricMatchResultDTO;
 import br.edu.ifpe.pontoif.biometric.dto.BiometricRegisterRequest;
 import br.edu.ifpe.pontoif.biometric.dto.BiometricSampleRequest;
 import br.edu.ifpe.pontoif.biometric.service.BiometricService;
@@ -27,12 +28,12 @@ public class BiometricController {
                 : ResponseEntity.internalServerError().body("❌ Failed to register biometric.");
     }
 
-    @Operation(summary = "Capture fingerprint and send for verification")
     @PostMapping("/match")
-    public ResponseEntity<String> sendSample(@RequestBody BiometricSampleRequest req) {
-        boolean ok = service.captureAndSendSample(req.sessionId());
-        return ok
-                ? ResponseEntity.ok("✅ Biometric sample sent successfully.")
-                : ResponseEntity.internalServerError().body("❌ Failed to send sample.");
+    public ResponseEntity<BiometricMatchResultDTO> sendSample(
+            @RequestBody BiometricSampleRequest req) {
+
+        return service.captureAndSendSample(req.sessionId())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 }
